@@ -931,7 +931,8 @@ testResult_t run() {
   }
 
 #if MPI_SUPPORT
-  char *lines = (proc == 0) ? (char *)malloc(totalProcs*MAX_LINE) : NULL; PRINT(">>>#if MPI_SUPPORT\n");
+  PRINT(">>>#if MPI_SUPPORT\n");
+  char *lines = (proc == 0) ? (char *)malloc(totalProcs*MAX_LINE) : NULL; 
   // Gather all output in rank order to root (0)
   MPI_Gather(line, MAX_LINE, MPI_BYTE, lines, MAX_LINE, MPI_BYTE, 0, MPI_COMM_WORLD);
   if (proc == 0) {
@@ -957,7 +958,8 @@ testResult_t run() {
     NCCLCHECK(ncclGetUniqueId(&ncclId));
   }
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT (2)\n"); MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
+  PRINT(">>>#ifdef MPI_SUPPORT (2)\n");
+  MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
   MPI_Barrier(MPI_COMM_WORLD); // Ensure Bcast is complete for HCOLL
 #endif
   int gpus[nGpus*nThreads];
@@ -1101,7 +1103,10 @@ testResult_t run() {
   PRINT(">>>outside for \n");
 
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT (3)\n"); MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+  PRINT(">>>#ifdef MPI_SUPPORT (3)\n");
+  PRINT(">>>#before MPI_Allreduce (3)\n");
+  MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+  PRINT(">>>#after MPI_Allreduce (3)\n");
 #endif
 
   if (!parallel_init) {
