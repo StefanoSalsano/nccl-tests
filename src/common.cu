@@ -957,7 +957,7 @@ testResult_t run() {
     NCCLCHECK(ncclGetUniqueId(&ncclId));
   }
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT\n"); MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
+  PRINT(">>>#ifdef MPI_SUPPORT (2)\n"); MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
   MPI_Barrier(MPI_COMM_WORLD); // Ensure Bcast is complete for HCOLL
 #endif
   int gpus[nGpus*nThreads];
@@ -1101,7 +1101,7 @@ testResult_t run() {
   PRINT(">>>outside for \n");
 
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT\n"); MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+  PRINT(">>>#ifdef MPI_SUPPORT (3)\n"); MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 #endif
 
   if (!parallel_init) {
