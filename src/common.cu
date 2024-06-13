@@ -14,7 +14,7 @@
 
 #include "../verifiable/verifiable.h"
 
-#pragma message("CIAO")
+#pragma message ("CIAO")
 
 int test_ncclVersion = 0; // init'd with ncclGetVersion()
 
