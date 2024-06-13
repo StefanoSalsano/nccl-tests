@@ -14,8 +14,6 @@
 
 #include "../verifiable/verifiable.h"
 
-#pragma message ("CIAO")
-
 int test_ncclVersion = 0; // init'd with ncclGetVersion()
 
 #if NCCL_MAJOR >= 2
