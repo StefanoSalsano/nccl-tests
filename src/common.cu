@@ -884,7 +884,8 @@ testResult_t run() {
   getHostName(hostname, 1024);
 
 #ifdef MPI_SUPPORT
-  MPI_Comm_size(MPI_COMM_WORLD, &totalProcs); PRINT(">>>#ifdef MPI_SUPPORT\n");
+  PRINT(">>>#ifdef MPI_SUPPORT (1)\n");
+  MPI_Comm_size(MPI_COMM_WORLD, &totalProcs); 
   MPI_Comm_rank(MPI_COMM_WORLD, &proc);
   uint64_t hostHashs[totalProcs];
   hostHashs[proc] = getHostHash(hostname);
