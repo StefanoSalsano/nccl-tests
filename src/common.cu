@@ -939,6 +939,7 @@ testResult_t run() {
     free(lines);
   }
   PRINT(">>>before MPI_Allreduce\n"); MPI_Allreduce(MPI_IN_PLACE, &maxMem, 1, MPI_LONG, MPI_MIN, MPI_COMM_WORLD);
+  PRINT(">>>after MPI_Allreduce\n");
 #else
   PRINT("%s", line);
 #endif
