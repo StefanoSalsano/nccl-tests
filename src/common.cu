@@ -14,6 +14,8 @@
 
 #include "../verifiable/verifiable.h"
 
+#pragma message("CIAO")
+
 int test_ncclVersion = 0; // init'd with ncclGetVersion()
 
 #if NCCL_MAJOR >= 2
@@ -870,6 +872,7 @@ int main(int argc, char* argv[]) {
            (unsigned long long)maxBytes);
     return -1;
   }
+
 #ifdef MPI_SUPPORT
   PRINT(">>>#ifdef MPI_SUPPORT (0)\n");
   MPI_Init(&argc, &argv);
