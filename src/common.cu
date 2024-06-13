@@ -1104,9 +1104,9 @@ testResult_t run() {
 
 #ifdef MPI_SUPPORT
   PRINT(">>>#ifdef MPI_SUPPORT (3)\n");
-  PRINT(">>>#before MPI_Allreduce (3)\n");
+  PRINT(">>>#before MPI_Allreduce\n");
   MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-  PRINT(">>>#after MPI_Allreduce (3)\n");
+  PRINT(">>>#after MPI_Allreduce\n");
 #endif
 
   if (!parallel_init) {
