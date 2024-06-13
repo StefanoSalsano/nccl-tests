@@ -884,7 +884,7 @@ testResult_t run() {
   getHostName(hostname, 1024);
 
 #ifdef MPI_SUPPORT
-  MPI_Comm_size(MPI_COMM_WORLD, &totalProcs);
+  MPI_Comm_size(MPI_COMM_WORLD, &totalProcs); PRINT(">>>#ifdef MPI_SUPPORT\n");
   MPI_Comm_rank(MPI_COMM_WORLD, &proc);
   uint64_t hostHashs[totalProcs];
   hostHashs[proc] = getHostHash(hostname);
@@ -930,7 +930,7 @@ testResult_t run() {
   }
 
 #if MPI_SUPPORT
-  char *lines = (proc == 0) ? (char *)malloc(totalProcs*MAX_LINE) : NULL;
+  char *lines = (proc == 0) ? (char *)malloc(totalProcs*MAX_LINE) : NULL; PRINT(">>>#if MPI_SUPPORT\n");
   // Gather all output in rank order to root (0)
   MPI_Gather(line, MAX_LINE, MPI_BYTE, lines, MAX_LINE, MPI_BYTE, 0, MPI_COMM_WORLD);
   if (proc == 0) {
@@ -938,7 +938,7 @@ testResult_t run() {
       PRINT("%s", lines+MAX_LINE*p);
     free(lines);
   }
-  MPI_Allreduce(MPI_IN_PLACE, &maxMem, 1, MPI_LONG, MPI_MIN, MPI_COMM_WORLD);
+  PRINT(">>>before MPI_Allreduce\n"); MPI_Allreduce(MPI_IN_PLACE, &maxMem, 1, MPI_LONG, MPI_MIN, MPI_COMM_WORLD);
 #else
   PRINT("%s", line);
 #endif
