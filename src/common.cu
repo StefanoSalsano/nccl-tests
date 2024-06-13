@@ -956,7 +956,7 @@ testResult_t run() {
     NCCLCHECK(ncclGetUniqueId(&ncclId));
   }
 #ifdef MPI_SUPPORT
-  MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
+  PRINT(">>>#ifdef MPI_SUPPORT\n"); MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
   MPI_Barrier(MPI_COMM_WORLD); // Ensure Bcast is complete for HCOLL
 #endif
   int gpus[nGpus*nThreads];
@@ -979,7 +979,7 @@ testResult_t run() {
     else
       CUDACHECK(cudaStreamCreateWithFlags(streams+i, cudaStreamNonBlocking));
   }
-
+  PRINT(">>>BEFORE IF PARALLEL INIT\n");
   //if parallel init is not selected, use main thread to initialize NCCL
   ncclComm_t* comms = (ncclComm_t*)malloc(sizeof(ncclComm_t)*nThreads*nGpus);
 #if NCCL_VERSION_CODE >= NCCL_VERSION(2,19,0)
@@ -987,15 +987,20 @@ testResult_t run() {
   void **recvRegHandles = NULL;
 #endif
   if (!parallel_init) {
+     PRINT(">>>INSIDE NOT PARALLEL_INIT\n"); 
      if (ncclProcs == 1) {
+       PRINT(">>>ncclProcs == 1\n");
        NCCLCHECK(ncclCommInitAll(comms, nGpus*nThreads, gpus));
      } else {
+       PRINT(">>>ncclProcs != 1\n");
        NCCLCHECK(ncclGroupStart());
        for (int i=0; i<nGpus*nThreads; i++) {
          CUDACHECK(cudaSetDevice(gpus[i]));
          NCCLCHECK(ncclCommInitRank(comms+i, ncclProcs*nThreads*nGpus, ncclId, ncclProc*nThreads*nGpus+i));
        }
+       PRINT(">>>BEFORE ncclGroupEnd\n");
        NCCLCHECK(ncclGroupEnd());
+       PRINT(">>>AFTER ncclGroupEnd\n");
      }
 #if NCCL_VERSION_CODE >= NCCL_VERSION(2,19,0)
      sendRegHandles = (local_register) ? (void **)malloc(sizeof(*sendRegHandles)*nThreads*nGpus) : NULL;
