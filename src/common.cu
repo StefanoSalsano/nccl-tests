@@ -871,6 +871,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 #ifdef MPI_SUPPORT
+  PRINT(">>>#ifdef MPI_SUPPORT (0)\n");
   MPI_Init(&argc, &argv);
 #endif
   TESTCHECK(run());
