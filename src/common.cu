@@ -1007,6 +1007,7 @@ testResult_t run() {
      sendRegHandles = (local_register) ? (void **)malloc(sizeof(*sendRegHandles)*nThreads*nGpus) : NULL;
      recvRegHandles = (local_register) ? (void **)malloc(sizeof(*recvRegHandles)*nThreads*nGpus) : NULL;
      for (int i=0; i<nGpus*nThreads; i++) {
+       PRINT(">>>before if local_register\n");
        if (local_register) {
          PRINT(">>>ncclCommRegister\n");
          NCCLCHECK(ncclCommRegister(comms[i], sendbuffs[i], maxBytes, &sendRegHandles[i]));
@@ -1022,7 +1023,9 @@ testResult_t run() {
   int errors[nThreads];
   double bw[nThreads];
   double* delta;
+  PRINT(">>>before cudaHostAlloc\n");
   CUDACHECK(cudaHostAlloc(&delta, sizeof(double)*nThreads*NUM_BLOCKS, cudaHostAllocPortable | cudaHostAllocMapped));
+  PRINT(">>>after cudaHostAlloc\n");
   int bw_count[nThreads];
   for (int t=0; t<nThreads; t++) {
     bw[t] = 0.0;
