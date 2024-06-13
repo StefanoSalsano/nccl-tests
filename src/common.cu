@@ -1088,6 +1088,7 @@ testResult_t run() {
 
   // Wait for other threads and accumulate stats and errors
   for (int t=nThreads-1; t>=0; t--) {
+    PRINT(">>>inside for \n");
     if (t) pthread_join(threads[t].thread, NULL);
     TESTCHECK(threads[t].ret);
     if (t) {
@@ -1096,12 +1097,14 @@ testResult_t run() {
       bw_count[0] += bw_count[t];
     }
   }
+  PRINT(">>>outside for \n");
 
 #ifdef MPI_SUPPORT
-  MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+  PRINT(">>>#ifdef MPI_SUPPORT\n"); MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 #endif
 
   if (!parallel_init) {
+    PRINT(">>>INSIDE NOT PARALLEL_INIT\n");
     for(int i=0; i<nGpus*nThreads; ++i) {
 #if NCCL_VERSION_CODE >= NCCL_VERSION(2,19,0)
       if (local_register) NCCLCHECK(ncclCommDeregister(comms[i], sendRegHandles[i]));
