@@ -996,6 +996,7 @@ testResult_t run() {
        NCCLCHECK(ncclGroupStart());
        for (int i=0; i<nGpus*nThreads; i++) {
          CUDACHECK(cudaSetDevice(gpus[i]));
+         PRINT(">>>ncclCommInitRank, ncclProcs*nThreads*nGpus = %d\n",ncclProcs*nThreads*nGpus);
          NCCLCHECK(ncclCommInitRank(comms+i, ncclProcs*nThreads*nGpus, ncclId, ncclProc*nThreads*nGpus+i));
        }
        PRINT(">>>BEFORE ncclGroupEnd\n");
@@ -1006,8 +1007,14 @@ testResult_t run() {
      sendRegHandles = (local_register) ? (void **)malloc(sizeof(*sendRegHandles)*nThreads*nGpus) : NULL;
      recvRegHandles = (local_register) ? (void **)malloc(sizeof(*recvRegHandles)*nThreads*nGpus) : NULL;
      for (int i=0; i<nGpus*nThreads; i++) {
-       if (local_register) NCCLCHECK(ncclCommRegister(comms[i], sendbuffs[i], maxBytes, &sendRegHandles[i]));
-       if (local_register) NCCLCHECK(ncclCommRegister(comms[i], recvbuffs[i], maxBytes, &recvRegHandles[i]));
+       if (local_register) {
+         PRINT(">>>ncclCommRegister\n");
+         NCCLCHECK(ncclCommRegister(comms[i], sendbuffs[i], maxBytes, &sendRegHandles[i]));
+       }
+       if (local_register) {
+         PRINT(">>>ncclCommRegister\n");
+         NCCLCHECK(ncclCommRegister(comms[i], recvbuffs[i], maxBytes, &recvRegHandles[i]));
+       }
      }
 #endif
   }
