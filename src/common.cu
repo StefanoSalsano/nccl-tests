@@ -1044,6 +1044,8 @@ testResult_t run() {
 
   struct testThread threads[nThreads];
   memset(threads, 0, sizeof(struct testThread)*nThreads);
+  
+  PRINT(">>>nThreads = %d\n",nThreads);
 
   for (int t=nThreads-1; t>=0; t--) {
     threads[t].args.minbytes=minBytes;
@@ -1073,10 +1075,15 @@ testResult_t run() {
     threads[t].args.reportErrors = datacheck;
 
     threads[t].func = parallel_init ? threadInit : threadRunTests;
-    if (t)
+    if (t) {
+      PRINT(">>>t not null, threadLaunch\n");
       TESTCHECK(threadLaunch(threads+t));
-    else
+    }
+    else {
+      PRINT(">>>t null, threads[t].func\n");
       TESTCHECK(threads[t].func(&threads[t].args));
+    }
+       
   }
 
   // Wait for other threads and accumulate stats and errors
