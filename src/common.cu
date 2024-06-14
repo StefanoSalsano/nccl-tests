@@ -1106,7 +1106,7 @@ testResult_t run() {
 
 #ifdef MPI_SUPPORT
   PRINT(">>>#ifdef MPI_SUPPORT (3)\n");
-  PRINT(">>>#before MPI_Allreduce\n");
+  PRINT(">>> %s : #before MPI_Allreduce\n",hostname);
   MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
   PRINT(">>>#after MPI_Allreduce\n");
 #endif
