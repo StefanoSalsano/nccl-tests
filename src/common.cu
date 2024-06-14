@@ -384,7 +384,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     #endif
     char hostname[1024];
     getHostName(hostname, 1024);    
-    printf (" %s before runColl \n", hostname);
+    //printf (" %s before runColl \n", hostname);
     TESTCHECK(args->collTest->runColl(
           (void*)(in_place ? recvBuff + args->sendInplaceOffset*rank : sendBuff),
           (void*)(in_place ? recvBuff + args->recvInplaceOffset*rank : recvBuff),
