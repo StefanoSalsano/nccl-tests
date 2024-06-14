@@ -349,13 +349,12 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
     ncclRedOp_t op;
+    printf ("opIndex : %d \n", op);
 
     if(opIndex < ncclNumOps) {
       op = opIndex;
     }
 
-    printf ("%d opIndex\n", op);
-    
     #if NCCL_VERSION_CODE >= NCCL_VERSION(2,11,0)
     else {
       union {
