@@ -612,7 +612,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
       setupArgs(size, type, args);
       char rootName[100];
       sprintf(rootName, "%6i", root);
-      PRINT("%12li  %12li  %8s  %6s  %6s", max(args->sendBytes, args->expectedBytes), args->nbytes / wordSize(type), typeName, opName, rootName);
+      PRINT("%12li  %12li  %8s  %6s  %6s *****\n", max(args->sendBytes, args->expectedBytes), args->nbytes / wordSize(type), typeName, opName, rootName);
       TESTCHECK(BenchTime(args, type, op, root, 0));
       TESTCHECK(BenchTime(args, type, op, root, 1));
       PRINT("\n");
