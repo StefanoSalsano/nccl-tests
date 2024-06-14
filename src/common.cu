@@ -382,7 +382,9 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
       NCCLCHECK(ncclRedOpCreatePreMulSum(&op, &u64, type, ncclScalarHostImmediate, args->comms[i]));
     }
     #endif
-
+    char hostname[1024];
+    getHostName(hostname, 1024);    
+    printf (" %s before runColl \n", hostname);
     TESTCHECK(args->collTest->runColl(
           (void*)(in_place ? recvBuff + args->sendInplaceOffset*rank : sendBuff),
           (void*)(in_place ? recvBuff + args->recvInplaceOffset*rank : recvBuff),
@@ -648,6 +650,7 @@ testResult_t threadRunTests(struct threadArgs* args) {
   // args->collTest = &allReduceTest; this sets the collective operation to be testes 
   //                                  in our case allReduce
   // the collective operation ncclAllReduce in nccl is run in AllReduceRunColl function in all_reduce.cu
+  
   
   TESTCHECK(ncclTestEngine.runTest(args, ncclroot, (ncclDataType_t)nccltype, test_typenames[nccltype], (ncclRedOp_t)ncclop, test_opnames[ncclop]));
   printf(">>> %s after runTest\n", hostname);
@@ -1126,7 +1129,7 @@ testResult_t run() {
     }
     else {
       PRINT(">>>t null, threads[t].func\n");
-      TESTCHECK(threads[t].func(&threads[t].args));
+      TESTCHECK(threads[t].func(&threads[t].args)); // execute threadRunTests 
     }
        
   }
