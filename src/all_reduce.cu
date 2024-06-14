@@ -65,6 +65,10 @@ testResult_t AllReduceRunTest(struct threadArgs* args, int root, ncclDataType_t 
   const char **run_typenames, **run_opnames;
   int type_count, op_count;
 
+  char hostname[1024];
+  getHostName(hostname, 1024);
+  printf("*** %s AllReduceRunTest\n",hostname);
+
   if ((int)type != -1) {
     type_count = 1;
     run_types = &type;
