@@ -349,7 +349,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
     ncclRedOp_t op;
-    printf ("opIndex : %d \n", op);
+    printf ("opIndex : %d \n", opindex);
 
     if(opIndex < ncclNumOps) {
       op = opIndex;
