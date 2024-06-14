@@ -589,7 +589,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
   // Warm-up for large size
   setupArgs(args->maxbytes, type, args);
   for (int iter = 0; iter < warmup_iters; iter++) {
-    printf("*** %s startColl\n",hostname);
+    //printf("*** %s startColl\n",hostname);
     TESTCHECK(startColl(args, type, op, root, 0, iter));
   }
   TESTCHECK(completeColl(args));
@@ -603,6 +603,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
 
   // Benchmark
   for (size_t size = args->minbytes; size<=args->maxbytes; size = ((args->stepfactor > 1) ? size*args->stepfactor : size+args->stepbytes)) {
+      printf("*** size= %d args->maxbytes= &d\n",size,args->maxbytes);
       setupArgs(size, type, args);
       char rootName[100];
       sprintf(rootName, "%6i", root);
