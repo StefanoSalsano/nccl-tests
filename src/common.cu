@@ -14,8 +14,6 @@
 
 #include "../verifiable/verifiable.h"
 
-#pragma message ("CIAO")
-
 int test_ncclVersion = 0; // init'd with ncclGetVersion()
 
 #if NCCL_MAJOR >= 2
@@ -874,7 +872,7 @@ int main(int argc, char* argv[]) {
   }
 
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT (0)\n");
+  printf(">>>#ifdef MPI_SUPPORT (0)\n");
   MPI_Init(&argc, &argv);
 #endif
   TESTCHECK(run());
@@ -888,7 +886,7 @@ testResult_t run() {
   getHostName(hostname, 1024);
 
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT (1)\n");
+  printf(">>>#ifdef MPI_SUPPORT (1)\n");
   MPI_Comm_size(MPI_COMM_WORLD, &totalProcs); 
   MPI_Comm_rank(MPI_COMM_WORLD, &proc);
   uint64_t hostHashs[totalProcs];
@@ -907,10 +905,11 @@ testResult_t run() {
   MPI_Comm_size(mpi_comm, &ncclProcs);
   MPI_Comm_rank(mpi_comm, &ncclProc);
 #endif
+
   is_main_thread = is_main_proc = (proc == 0) ? 1 : 0;
 
   PRINT("# nThread %d nGpus %d minBytes %ld maxBytes %ld step: %ld(%s) warmup iters: %d iters: %d agg iters: %d validation: %d graph: %d\n",
-        nThreads, nGpus, minBytes, maxBytes,
+       nThreads, nGpus, minBytes, maxBytes,
         (stepFactor > 1)?stepFactor:stepBytes, (stepFactor > 1)?"factor":"bytes",
         warmup_iters, iters, agg_iters, datacheck, cudaGraphLaunches);
   if (blocking_coll) PRINT("# Blocking Enabled: wait for completion and barrier after each collective \n");
@@ -933,9 +932,8 @@ testResult_t run() {
                     rank, color, getpid(), hostname, cudaDev, prop.pciBusID, prop.name);
     maxMem = std::min(maxMem, prop.totalGlobalMem);
   }
-
 #if MPI_SUPPORT
-  PRINT(">>>#if MPI_SUPPORT\n");
+  PRINT(">>>#if MPI_SUPPORT STARTDEBUG  \n");
   char *lines = (proc == 0) ? (char *)malloc(totalProcs*MAX_LINE) : NULL; 
   // Gather all output in rank order to root (0)
   MPI_Gather(line, MAX_LINE, MPI_BYTE, lines, MAX_LINE, MPI_BYTE, 0, MPI_COMM_WORLD);
