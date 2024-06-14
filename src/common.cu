@@ -350,7 +350,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
     ncclRedOp_t op;
-    printf ("opIndex : %d \n", opIndex); //0 is ncclSum
+    //printf ("opIndex : %d \n", opIndex); //0 is ncclSum
 
     if(opIndex < ncclNumOps) {
       op = opIndex;
@@ -642,8 +642,13 @@ testResult_t threadRunTests(struct threadArgs* args) {
   CUDACHECK(cudaSetDevice(args->gpus[0]));
   printf(">>> %s before runTest\n", hostname);
 
-  // in our case ncclTestEngine=allGatherEngine
-  // allGatherEngine.AllGatherRunTest in all_gather.cu, which in turn calls TimeTest in this file
+  // STEFANO
+  // in our case ncclTestEngine=allReduceEngine
+  // allReduceEngine.AllReduceRunTest in all_reduce.cu, which in turn calls TimeTest in this file
+  // args->collTest = &allReduceTest; this sets the collective operation to be testes 
+  //                                  in our case allReduce
+  // the collective operation ncclAllReduce in nccl is run in AllReduceRunColl function in all_reduce.cu
+  
   TESTCHECK(ncclTestEngine.runTest(args, ncclroot, (ncclDataType_t)nccltype, test_typenames[nccltype], (ncclRedOp_t)ncclop, test_opnames[ncclop]));
   printf(">>> %s after runTest\n", hostname);
   return testSuccess;
