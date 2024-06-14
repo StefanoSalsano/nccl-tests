@@ -610,14 +610,14 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
   return testSuccess;
 }
 
-testResult_t threadRunTests(struct threadArgs* args) {
+testResult_t threadRunTests(struct threadArgs* args, char * hostname) {
   // Set device to the first of our GPUs. If we don't do that, some operations
   // will be done on the current GPU (by default : 0) and if the GPUs are in
   // exclusive mode those operations will fail.
   CUDACHECK(cudaSetDevice(args->gpus[0]));
-  printf("before runTest\n");
+  printf(">>> %s before runTest\n", hostname);
   TESTCHECK(ncclTestEngine.runTest(args, ncclroot, (ncclDataType_t)nccltype, test_typenames[nccltype], (ncclRedOp_t)ncclop, test_opnames[ncclop]));
-  printf("after runTest\n");
+  printf(">>> %s after runTest\n", hostname);
   return testSuccess;
 }
 
@@ -645,7 +645,7 @@ testResult_t threadInit(struct threadArgs* args) {
   }
 #endif
 
-  TESTCHECK(threadRunTests(args));
+  TESTCHECK(threadRunTests(args, hostname));
 
   for (int i=0; i<args->nGpus; i++) {
 #if NCCL_VERSION_CODE >= NCCL_VERSION(2,19,0)
@@ -1088,7 +1088,7 @@ testResult_t run() {
     }
     else {
       PRINT(">>>t null, threads[t].func\n");
-      TESTCHECK(threads[t].func(&threads[t].args));
+      TESTCHECK(threads[t].func(&threads[t].args, hostname));
     }
        
   }
