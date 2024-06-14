@@ -332,6 +332,9 @@ testResult_t testStreamSynchronize(int ngpus, cudaStream_t* streams, ncclComm_t*
 testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t opIndex, int root, int in_place, int iter) {
   size_t count = args->nbytes / wordSize(type);
 
+  // ncclRedOp_t opIndex is the Reduction operation selector
+  // defined in nccl.h.in (external)
+
   // Try to change offset for each iteration so that we avoid cache effects and catch race conditions in ptrExchange
   size_t totalnbytes = max(args->sendBytes, args->expectedBytes);
   size_t steps = totalnbytes ? args->maxbytes / totalnbytes : 1;
@@ -350,6 +353,9 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     if(opIndex < ncclNumOps) {
       op = opIndex;
     }
+
+    printf ("%d opIndex\n", op);
+    
     #if NCCL_VERSION_CODE >= NCCL_VERSION(2,11,0)
     else {
       union {
