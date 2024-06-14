@@ -608,7 +608,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
 
   // Benchmark
   for (size_t size = args->minbytes; size<=args->maxbytes; size = ((args->stepfactor > 1) ? size*args->stepfactor : size+args->stepbytes)) {
-      printf("*** %s : size= %12li args->maxbytes= %12li\n",hostname,size,args->maxbytes);
+      //printf("*** %s : size= %12li args->maxbytes= %12li\n",hostname,size,args->maxbytes);
       setupArgs(size, type, args);
       char rootName[100];
       sprintf(rootName, "%6i", root);
