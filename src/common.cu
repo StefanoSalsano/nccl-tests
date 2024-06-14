@@ -334,6 +334,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
 
   // ncclRedOp_t opIndex is the Reduction operation selector
   // defined in nccl.h.in (external)
+  // 0 is ncclSum
 
   // Try to change offset for each iteration so that we avoid cache effects and catch race conditions in ptrExchange
   size_t totalnbytes = max(args->sendBytes, args->expectedBytes);
@@ -349,7 +350,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
     ncclRedOp_t op;
-    printf ("opIndex : %d \n", opIndex);
+    printf ("opIndex : %d \n", opIndex); //0 is ncclSum
 
     if(opIndex < ncclNumOps) {
       op = opIndex;
@@ -613,6 +614,9 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
     TESTCHECK(startColl(args, type, op, root, 0, iter));
   }
   TESTCHECK(completeColl(args));
+
+    //printf("*** %s end of warm up phase\n",hostname);
+  
 
   // Benchmark
   for (size_t size = args->minbytes; size<=args->maxbytes; size = ((args->stepfactor > 1) ? size*args->stepfactor : size+args->stepbytes)) {
