@@ -417,11 +417,14 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     TESTCHECK(args->collTest->initData(args, type, op, root, 99, in_place));
   }
 
+  printf (" %s before Sync, in_place : %d \n",hostname, in_place);
   // Sync
   TESTCHECK(startColl(args, type, op, root, in_place, 0));
   TESTCHECK(completeColl(args));
 
   Barrier(args);
+  printf (" %s after Sync/barrier\n",hostname);
+
 
 #if CUDART_VERSION >= 11030
   cudaGraph_t graphs[args->nGpus];
@@ -613,6 +616,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
       char rootName[100];
       sprintf(rootName, "%6i", root);
       PRINT("%12li  %12li  %8s  %6s  %6s *****\n", max(args->sendBytes, args->expectedBytes), args->nbytes / wordSize(type), typeName, opName, rootName);
+      // the second part of the line is printed after inside BenchTime
       TESTCHECK(BenchTime(args, type, op, root, 0));
       TESTCHECK(BenchTime(args, type, op, root, 1));
       PRINT("\n");
@@ -628,6 +632,9 @@ testResult_t threadRunTests(struct threadArgs* args) {
   getHostName(hostname, 1024);
   CUDACHECK(cudaSetDevice(args->gpus[0]));
   printf(">>> %s before runTest\n", hostname);
+
+  // in our case ncclTestEngine=allGatherEngine
+  // allGatherEngine.AllGatherRunTest in all_gather.cu, which in turn calls TimeTest in this file
   TESTCHECK(ncclTestEngine.runTest(args, ncclroot, (ncclDataType_t)nccltype, test_typenames[nccltype], (ncclRedOp_t)ncclop, test_opnames[ncclop]));
   printf(">>> %s after runTest\n", hostname);
   return testSuccess;
