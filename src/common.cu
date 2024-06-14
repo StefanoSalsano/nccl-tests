@@ -406,9 +406,14 @@ testResult_t completeColl(struct threadArgs* args) {
 }
 
 testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t op, int root, int in_place) {
+  char hostname[1024];
+  getHostName(hostname, 1024);
+  printf("** %s \n",hostname);
+
   size_t count = args->nbytes / wordSize(type);
   if (datacheck) {
     // Initialize sendbuffs, recvbuffs and expected
+    printf("** %s initData\n",hostname);
     TESTCHECK(args->collTest->initData(args, type, op, root, 99, in_place));
   }
 
@@ -603,7 +608,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
 
   // Benchmark
   for (size_t size = args->minbytes; size<=args->maxbytes; size = ((args->stepfactor > 1) ? size*args->stepfactor : size+args->stepbytes)) {
-      printf("*** size= %12li args->maxbytes= %12li\n",size,args->maxbytes);
+      printf("*** %s : size= %12li args->maxbytes= %12li\n",hostname,size,args->maxbytes);
       setupArgs(size, type, args);
       char rootName[100];
       sprintf(rootName, "%6i", root);
@@ -773,7 +778,6 @@ int main(int argc, char* argv[]) {
         maxBytes = (size_t)parsed;
         break;
       case 'i':
-        //stepBytes = strtol(optarg, NULL, 0);
         parsed = parsesize(optarg);
         if (parsed < 0) {
           fprintf(stderr, "invalid size specified for 'stepBytes'\n");
