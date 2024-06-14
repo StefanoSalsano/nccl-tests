@@ -408,12 +408,12 @@ testResult_t completeColl(struct threadArgs* args) {
 testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t op, int root, int in_place) {
   char hostname[1024];
   getHostName(hostname, 1024);
-  printf("** %s \n",hostname);
+  //printf("** %s \n",hostname);
 
   size_t count = args->nbytes / wordSize(type);
   if (datacheck) {
     // Initialize sendbuffs, recvbuffs and expected
-    printf("** %s initData\n",hostname);
+    //printf("** %s initData\n",hostname);
     TESTCHECK(args->collTest->initData(args, type, op, root, 99, in_place));
   }
 
