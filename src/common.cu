@@ -563,9 +563,9 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     sprintf(timeStr, "%7.2f", timeUsec);
   }
   if (args->reportErrors) {
-    PRINT("  %7s  %6.2f  %6.2f  %5g", timeStr, algBw, busBw, (double)wrongElts);
+    PRINT("  %7s  %6.2f  %6.2f  %5g ERRORS***\n", timeStr, algBw, busBw, (double)wrongElts);
   } else {
-    PRINT("  %7s  %6.2f  %6.2f  %5s", timeStr, algBw, busBw, "N/A");
+    PRINT("  %7s  %6.2f  %6.2f  %5s ****\n", timeStr, algBw, busBw, "N/A");
   }
 
   args->bw[0] += busBw;
