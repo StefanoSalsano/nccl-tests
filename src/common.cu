@@ -615,7 +615,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
   }
   TESTCHECK(completeColl(args));
 
-    //printf("*** %s end of warm up phase\n",hostname);
+    printf("*** %s end of warm up phase\n",hostname);
   
 
   // Benchmark
