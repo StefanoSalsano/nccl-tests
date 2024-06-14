@@ -615,7 +615,9 @@ testResult_t threadRunTests(struct threadArgs* args) {
   // will be done on the current GPU (by default : 0) and if the GPUs are in
   // exclusive mode those operations will fail.
   CUDACHECK(cudaSetDevice(args->gpus[0]));
+  printf("before runTest\n");
   TESTCHECK(ncclTestEngine.runTest(args, ncclroot, (ncclDataType_t)nccltype, test_typenames[nccltype], (ncclRedOp_t)ncclop, test_opnames[ncclop]));
+  printf("after runTest\n");
   return testSuccess;
 }
 
