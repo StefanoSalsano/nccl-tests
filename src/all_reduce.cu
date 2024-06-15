@@ -68,9 +68,6 @@ testResult_t AllReduceRunTest(struct threadArgs* args, int root, ncclDataType_t 
   const char **run_typenames, **run_opnames;
   int type_count, op_count;
 
-  char hostname[1024];
-  getHostName(hostname, 1024);
-  printf("%s:NCCL-TEST: AllReduceRunTest\n",hostname);
 
   if ((int)type != -1) {
     type_count = 1;
@@ -94,7 +91,9 @@ testResult_t AllReduceRunTest(struct threadArgs* args, int root, ncclDataType_t 
 
   for (int i=0; i<type_count; i++) {
     for (int j=0; j<op_count; j++) {
-      printf("*** %s TimeTest\n",hostname);
+      char hostname[1024];
+      getHostName(hostname, 1024);
+      printf("%s:NCCL-TEST: AllReduceRunTest -> TimeTest\n",hostname);
       TESTCHECK(TimeTest(args, run_types[i], run_typenames[i], run_ops[j], run_opnames[j], -1));
     }
   }

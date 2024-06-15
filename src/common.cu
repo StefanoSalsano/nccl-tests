@@ -425,13 +425,13 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     TESTCHECK(args->collTest->initData(args, type, op, root, 99, in_place));
   }
 
-  printf (" %s before Sync, in_place : %d \n",hostname, in_place);
+  printf ("%s:NCCL-TEST: before Sync, in_place : %d \n",hostname, in_place);
   // Sync
   TESTCHECK(startColl(args, type, op, root, in_place, 0));
   TESTCHECK(completeColl(args));
 
   Barrier(args);
-  printf (" %s after Sync/barrier\n",hostname);
+  printf ("%s:NCCL-TEST: after Sync/barrier\n",hostname);
 
 
 #if CUDART_VERSION >= 11030
@@ -454,6 +454,7 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
   for (int iter = 0; iter < iters; iter++) {
     if (agg_iters>1) NCCLCHECK(ncclGroupStart());
     for (int aiter = 0; aiter < agg_iters; aiter++) {
+      printf ("%s:NCCL-TEST: startColl\n",hostname);
       TESTCHECK(startColl(args, type, op, root, in_place, iter*agg_iters+aiter));
     }
     if (agg_iters>1) NCCLCHECK(ncclGroupEnd());
@@ -620,7 +621,7 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
 //  }
 //  TESTCHECK(completeColl(args));
 
-    printf("*** %s end of warm up phase\n",hostname);
+    printf("%s:NCCL-TEST: end of warm up phase\n",hostname);
   
 
   // Benchmark
