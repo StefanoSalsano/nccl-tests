@@ -41,6 +41,7 @@ void AllReduceGetBw(size_t count, int typesize, double sec, double* algBw, doubl
 }
 
 testResult_t AllReduceRunColl(void* sendbuff, void* recvbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
+  printf("%s:NCCL-TEST: AllReduceRunColl size: %12li \n",hostname,count);
   NCCLCHECK(ncclAllReduce(sendbuff, recvbuff, count, type, op, comm, stream));
   return testSuccess;
 }
@@ -67,7 +68,7 @@ testResult_t AllReduceRunTest(struct threadArgs* args, int root, ncclDataType_t 
 
   char hostname[1024];
   getHostName(hostname, 1024);
-  printf("*** %s AllReduceRunTest\n",hostname);
+  printf("%s:NCCL-TEST: AllReduceRunTest\n",hostname);
 
   if ((int)type != -1) {
     type_count = 1;
