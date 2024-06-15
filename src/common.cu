@@ -602,20 +602,23 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
   char hostname[1024];
   getHostName(hostname, 1024);
 
-  // Warm-up for large size
-  setupArgs(args->maxbytes, type, args);
-  for (int iter = 0; iter < warmup_iters; iter++) {
-    //printf("*** %s startColl\n",hostname);
-    TESTCHECK(startColl(args, type, op, root, 0, iter));
-  }
-  TESTCHECK(completeColl(args));
+  //UNDO
+  // commented out warm up phase
 
-  // Warm-up for small size
-  setupArgs(args->minbytes, type, args);
-  for (int iter = 0; iter < warmup_iters; iter++) {
-    TESTCHECK(startColl(args, type, op, root, 0, iter));
-  }
-  TESTCHECK(completeColl(args));
+//  // Warm-up for large size
+//  setupArgs(args->maxbytes, type, args);
+//  for (int iter = 0; iter < warmup_iters; iter++) {
+//    //printf("*** %s startColl\n",hostname);
+//    TESTCHECK(startColl(args, type, op, root, 0, iter));
+//  }
+//  TESTCHECK(completeColl(args));
+//
+//  // Warm-up for small size
+//  setupArgs(args->minbytes, type, args);
+//  for (int iter = 0; iter < warmup_iters; iter++) {
+//    TESTCHECK(startColl(args, type, op, root, 0, iter));
+//  }
+//  TESTCHECK(completeColl(args));
 
     printf("*** %s end of warm up phase\n",hostname);
   
