@@ -632,7 +632,10 @@ testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* 
       PRINT("%12li  %12li  %8s  %6s  %6s *****\n", max(args->sendBytes, args->expectedBytes), args->nbytes / wordSize(type), typeName, opName, rootName);
       // the second part of the line is printed after inside BenchTime
       TESTCHECK(BenchTime(args, type, op, root, 0));
-      TESTCHECK(BenchTime(args, type, op, root, 1));
+      
+      //UNDO 
+      //removed test benchmark for case in-place 
+      //TESTCHECK(BenchTime(args, type, op, root, 1));
       PRINT("\n");
   }
   return testSuccess;
