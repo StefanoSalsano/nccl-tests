@@ -343,6 +343,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
 
   if (args->nGpus > 1) NCCLCHECK(ncclGroupStart());
   for (int i = 0; i < args->nGpus; i++) {
+    printf("XXXXXXXXXXXXXXXXXXXXXXX debug print args->nGpus = %d args->nThreads = %d ",args->nGpus,args->nThreads);
 #ifndef NCCL_MAJOR
     CUDACHECK(cudaSetDevice(args->gpus[i]));
 #endif
@@ -590,6 +591,7 @@ void setupArgs(size_t size, ncclDataType_t type, struct threadArgs* args) {
   size_t count, sendCount, recvCount, paramCount, sendInplaceOffset, recvInplaceOffset;
 
   count = size / wordSize(type);
+  //in our scenario the AllReduceGetCollByteCount function in all_reduce.cu is used
   args->collTest->getCollByteCount(&sendCount, &recvCount, &paramCount, &sendInplaceOffset, &recvInplaceOffset, (size_t)count, (size_t)nranks);
 
   args->nbytes = paramCount * wordSize(type);
