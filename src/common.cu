@@ -413,6 +413,9 @@ testResult_t completeColl(struct threadArgs* args) {
   return testSuccess;
 }
 
+// Repeat the test n times and evaluate the average
+// The test is executed 1+n times
+
 testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t op, int root, int in_place) {
   char hostname[1024];
   getHostName(hostname, 1024);
@@ -595,6 +598,10 @@ void setupArgs(size_t size, ncclDataType_t type, struct threadArgs* args) {
   args->sendInplaceOffset = sendInplaceOffset * wordSize(type);
   args->recvInplaceOffset = recvInplaceOffset * wordSize(type);
 }
+
+// prepare the tests with a warm up phase
+// execute in place BenchTime and out-of-place BenchTime 
+// (BenchTime repeates the test 1+n times)
 
 testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* typeName, ncclRedOp_t op, const char* opName, int root) {
   // Sync to avoid first-call timeout
@@ -922,7 +929,6 @@ int main(int argc, char* argv[]) {
   }
 
 #ifdef MPI_SUPPORT
-  printf(">>>#ifdef MPI_SUPPORT (0)\n");
   MPI_Init(&argc, &argv);
 #endif
   TESTCHECK(run());
@@ -936,7 +942,6 @@ testResult_t run() {
   getHostName(hostname, 1024);
 
 #ifdef MPI_SUPPORT
-  printf(">>>#ifdef MPI_SUPPORT (1)\n");
   MPI_Comm_size(MPI_COMM_WORLD, &totalProcs); 
   MPI_Comm_rank(MPI_COMM_WORLD, &proc);
   uint64_t hostHashs[totalProcs];
@@ -1010,7 +1015,6 @@ testResult_t run() {
     NCCLCHECK(ncclGetUniqueId(&ncclId));
   }
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT (2)\n");
   MPI_Bcast(&ncclId, sizeof(ncclId), MPI_BYTE, 0, mpi_comm);
   MPI_Barrier(MPI_COMM_WORLD); // Ensure Bcast is complete for HCOLL
 #endif
@@ -1155,7 +1159,6 @@ testResult_t run() {
   PRINT(">>>outside for \n");
 
 #ifdef MPI_SUPPORT
-  PRINT(">>>#ifdef MPI_SUPPORT (3)\n");
   PRINT(">>> %s : #before MPI_Allreduce\n",hostname);
   MPI_Allreduce(MPI_IN_PLACE, &errors[0], 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
   PRINT(">>>#after MPI_Allreduce\n");
