@@ -343,7 +343,8 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
 
   if (args->nGpus > 1) NCCLCHECK(ncclGroupStart());
   for (int i = 0; i < args->nGpus; i++) {
-    printf("XXXXXXXXXXXXXXXXXXXXXXX debug print args->nGpus = %d args->nThreads = %d ",args->nGpus,args->nThreads);
+    // printf("XXXXXXXXXXXXXXXXXXXXXXX debug print args->nGpus = %d args->nThreads = %d ",args->nGpus,args->nThreads);
+    // args->nGpus = 1 args->nThreads = 1
 #ifndef NCCL_MAJOR
     CUDACHECK(cudaSetDevice(args->gpus[i]));
 #endif
