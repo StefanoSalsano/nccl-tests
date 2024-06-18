@@ -430,13 +430,13 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     TESTCHECK(args->collTest->initData(args, type, op, root, 99, in_place));
   }
 
-  printf ("%s:NCCL-TEST: before Sync, in_place : %d \n",hostname, in_place);
+  printf ("%s:NCCL-TEST: BenchTime before Sync, in_place : %d \n",hostname, in_place);
   // Sync
   TESTCHECK(startColl(args, type, op, root, in_place, 0));
   TESTCHECK(completeColl(args));
 
   Barrier(args);
-  printf ("%s:NCCL-TEST: after Sync/barrier\n",hostname);
+  printf ("%s:NCCL-TEST: BenchTime after Sync/barrier\n",hostname);
 
 
 #if CUDART_VERSION >= 11030
@@ -459,7 +459,7 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
   for (int iter = 0; iter < iters; iter++) {
     if (agg_iters>1) NCCLCHECK(ncclGroupStart());
     for (int aiter = 0; aiter < agg_iters; aiter++) {
-      printf ("%s:NCCL-TEST: startColl\n",hostname);
+      printf ("%s:NCCL-TEST: BenchTime -> startColl inside the loop\n",hostname);
       TESTCHECK(startColl(args, type, op, root, in_place, iter*agg_iters+aiter));
     }
     if (agg_iters>1) NCCLCHECK(ncclGroupEnd());
@@ -525,7 +525,8 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
       }
 #endif
 
-      //test validation in single itertion, should ideally be included into the multi-iteration run
+      //test validation in single iteration, should ideally be included into the multi-iteration run
+      printf ("%s:NCCL-TEST: BenchTime -> startColl test validation\n",hostname);
       TESTCHECK(startColl(args, type, op, root, in_place, 0));
 
 #if CUDART_VERSION >= 11030
@@ -666,7 +667,7 @@ testResult_t threadRunTests(struct threadArgs* args) {
   // allReduceEngine.AllReduceRunTest in all_reduce.cu, which in turn calls TimeTest in this file
   // args->collTest = &allReduceTest; this sets the collective operation to be testes 
   //                                  in our case allReduce
-  // the collective operation ncclAllReduce in nccl is run in AllReduceRunColl function in all_reduce.cu
+  // the collective operation ncclAllReduce in nccl library is launched in AllReduceRunColl function in all_reduce.cu
   
   
   TESTCHECK(ncclTestEngine.runTest(args, ncclroot, (ncclDataType_t)nccltype, test_typenames[nccltype], (ncclRedOp_t)ncclop, test_opnames[ncclop]));
